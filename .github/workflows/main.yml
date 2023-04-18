@@ -31,7 +31,7 @@ jobs:
         run: cd ./android/ && chmod +x ./gradlew
       - name: Gradle Build
         run: |
-          cd ./android/ && ./gradlew release
+          cd ./android/ && ./gradlew bundle
       - name: Extract Android signing key from env
         run: |
           echo "${{ secrets.RELEASE_KEYSTORE }}" > android/release.jks.base64
@@ -56,6 +56,6 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
           asset_path: ./android/app/build/outputs/bundle/release/app-release-signed.aab
-          asset_name: app-release-signed.aab
+          asset_name: app-release-signed.apk
           asset_content_type: application/x-authorware-bin
           #asset_content_type: application/vnd.android.package-archive
