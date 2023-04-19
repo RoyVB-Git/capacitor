@@ -33,13 +33,13 @@ jobs:
         run: cd ./android/ && chmod +x ./gradlew
       - name: Gradle Bundle
         run: |
-          cd ./android/ && ./gradlew bundle
+          cd ./android/ && ./gradlew build
       - name: Extract Android signing key from env
         run: |
           echo "${{ secrets.RELEASE_KEYSTORE }}" > android/release.jks.base64
           base64 -d android/release.jks.base64 > android/release.decrypted.jks
       - name: Sign dev build
-        run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/bundle/release/app-release-signed.aab ./android/app/build/outputs/bundle/release/app-release.aab release
+        run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/build/release/app-release-signed.apk ./android/app/build/outputs/build/release/app-release.apk release
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -57,8 +57,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./android/app/build/outputs/bundle/release/app-release-signed.aab
-          asset_name: app-release-signed.aab
-          asset_content_type: application/x-authorware-bin
-          #when releasing as apk
-          #asset_content_type: application/vnd.android.package-archive
+          asset_path: ./android/app/build/outputs/build/release/app-release-signed.apk
+          asset_name: app-release-signed.apk
+          asset_content_type: application/vnd.android.package-archive
+          #asset_content_type: application/x-authorware-bin
+          
